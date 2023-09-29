@@ -110,15 +110,16 @@ def to_triangular(in_matrix, *args):
         res_matrix, perm_count, *res_args = leading_element(res_matrix, column, perm_count, *res_args)
         lead_el = res_matrix[column][column]
         for row in range(column + 1, height):
-            multiplier = -(res_matrix[row][column] / lead_el)
-            for k in range(column, height):
-                res_matrix[row][k] += res_matrix[column][k] * multiplier
-            for arg in res_args:
-                if isinstance(arg[column], int | float):
-                    arg[row] += arg[column] * multiplier
-                else:
-                    for k in range(len(arg[column])):
-                        arg[row][k] += arg[column][k] * multiplier
+            if not lead_el == 0:
+                multiplier = -(res_matrix[row][column] / lead_el)
+                for k in range(column, height):
+                    res_matrix[row][k] += res_matrix[column][k] * multiplier
+                for arg in res_args:
+                    if isinstance(arg[column], int | float):
+                        arg[row] += arg[column] * multiplier
+                    else:
+                        for k in range(len(arg[column])):
+                            arg[row][k] += arg[column][k] * multiplier
 
     if len(args) > 0:
         return res_matrix, perm_count, *res_args

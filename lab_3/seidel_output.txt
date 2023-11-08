@@ -1,3 +1,5 @@
+Warning: norm is greater or equals than 1
+
 ----- solutions -----
 
 x1 = 8.000424509878775

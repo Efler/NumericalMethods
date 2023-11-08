@@ -17,6 +17,13 @@ def convergence_condition(matrix):
     return True
 
 
+def norm(matrix):
+    tmp = max(sum(abs(x) for x in row) for row in matrix)
+    if tmp >= 1:
+        return False
+    return True
+
+
 def make_iteration(matrix, b, x):
     result_x = copy.deepcopy(x)
     for i in range(len(result_x)):
@@ -49,6 +56,12 @@ if __name__ == '__main__':
                     print('Error: invalid matrix or b vector size!')
                 else:
 
+
+                    output = []
+                    if not norm(input_matrix):
+                        output.append('Warning: norm is greater or equals than 1\n\n')
+
+
                     if not convergence_condition(input_matrix):
                         print('Error: the convergence condition is not satisfied!')
                         exit(1)
@@ -64,8 +77,6 @@ if __name__ == '__main__':
                             accuracy_condition = True
                         prev_x = new_x
 
-                    output = []
-                    print('\n########## LOGS ##########')
                     output.append('----- solutions -----\n\n')
                     for num, x in enumerate(new_x, 1):
                         if x == abs(x):

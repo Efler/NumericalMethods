@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import itertools as it
 
 
 def function(x: float) -> float:
@@ -69,6 +70,8 @@ def make_plot() -> None:
     plt.plot(x, [calculate_newton_polynomial(i, y_coefficients_newton, x_values_newton) for i in x],
              label=r'$Newton$',
              )
+    all_values = set(it.chain(x_values_lagrange, x_values_newton))
+    plt.scatter(list(all_values), [function(i) for i in all_values])
     plt.xlabel(r'$x$', fontsize=14)
     plt.ylabel(r'$y$', fontsize=14)
     plt.grid(True)
@@ -78,7 +81,7 @@ def make_plot() -> None:
 
 if __name__ == '__main__':
 
-    x_values_lagrange = [-2., -1., 0.2, 1.]
+    x_values_lagrange = [-2., -1., 0., 1.]
     x_values_newton = [-2., -1., 0., 1.]
     x_aster = -0.5
     rounding = 4

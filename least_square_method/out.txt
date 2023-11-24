@@ -1,0 +1,9 @@
+First order polynomial LSM:
+f (x)  =  2.5874  +  1.2879 * x
+Sum of squared errors:
+11.4549
+
+Second order polynomial LSM:
+f (x)  =  1.2126  +  1.8035 * x  +  0.5155 * x^2
+Sum of squared errors:
+1.533

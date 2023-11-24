@@ -6,4 +6,4 @@
      3       [0.0, 1.0]     1.0        0.8561      0.2127      0.6495   
      4       [1.0, 2.0]    2.7183       3.23       2.1612     -0.7204   
 
->>  Value of the Newton polynomial at the point x = -0.5 equals 0.6265
+>>  Value at the point x = -0.5 equals 0.6265

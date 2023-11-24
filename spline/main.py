@@ -32,7 +32,7 @@ for i in range(len(points) - 1):
         f'{round(d[i], rounding)}'.center(12, ' ')
     ]))
 
-output.append(f'\n>>  Value of the Newton polynomial at the point x = {x_aster} '
+output.append(f'\n>>  Value at the point x = {x_aster} '
               f'equals {round(my_spline.get_value(x_aster), rounding)}')
 
 output_str = '\n'.join(output)

@@ -1,0 +1,4 @@
+left handed derivative -> 1.0068
+right handed derivative -> 1.0508
+first order derivative -> 1.0288
+second order derivative -> 0.22

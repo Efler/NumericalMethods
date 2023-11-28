@@ -1,4 +1,5 @@
 import math
+import sys
 
 import numpy as np
 
@@ -113,7 +114,7 @@ def newton_method(a: float, b: float, eps: float) \
     return x, f, f_der, diff
 
 
-def check_conditions_simple_iteration(a: float, b: float, phi_func: function, phi_der_func: function) \
+def check_conditions_simple_iteration(a: float, b: float, phi_func, phi_der_func) \
         -> float:
     x_vals = np.arange(a, b + 0.01, 0.01)
     try:
@@ -129,7 +130,7 @@ def check_conditions_simple_iteration(a: float, b: float, phi_func: function, ph
     return q
 
 
-def simple_iteration_method(a: float, b: float, phi_func: function, phi_der_func: function, eps: float) \
+def simple_iteration_method(a: float, b: float, phi_func, phi_der_func, eps: float) \
         -> tuple[list[float], list[float]]:
     if (q := check_conditions_simple_iteration(a, b, phi_func, phi_der_func)) < 0:
         raise ValueError('Error conditions are not met for Simple iteration method!')
@@ -142,26 +143,125 @@ def simple_iteration_method(a: float, b: float, phi_func: function, phi_der_func
     return x, phi_vals
 
 
+def create_table_newton(a: float, b: float, eps: float) -> str:
+    table_newton = []
+    width_newton = 6 + 5 + 15 * 3 + 17
+    line_newton = '-' * width_newton
+    title_newton = ('|' + 'Newton method'.center(width_newton - 2, ' ')
+                    + '|\n|'
+                    + f'[{a}, {b}], epsilon = {eps}'.center(width_newton - 2, ' ')
+                    + '|')
+    header_newton = '|' + '|'.join([
+        'k'.center(5, ' '),
+        'x'.center(15, ' '),
+        'f(x)'.center(15, ' '),
+        "f'(x)".center(15, ' '),
+        "-f(x) / f'(x)".center(17, ' '),
+    ]) + '|'
+    try:
+        x_list, f_list, f_der_list, diff_list = newton_method(a, b, eps)
+        table_newton.append(line_newton)
+        table_newton.append(title_newton)
+        table_newton.append(line_newton)
+        table_newton.append(header_newton)
+        table_newton.append(line_newton)
+        for j in range(len(x_list) - 1):
+            tmp = '|' + '|'.join([
+                f'{j}'.center(5, ' '),
+                f'{round(x_list[j], -round(math.log(eps, 10)) + 1)}'
+                .center(15, ' '),
+                f'{round(f_list[j], -round(math.log(eps, 10)) + 1)}'
+                .center(15, ' '),
+                f'{round(f_der_list[j], -round(math.log(eps, 10)) + 1)}'
+                .center(15, ' '),
+                f'{round(diff_list[j], -round(math.log(eps, 10)) + 1)}'
+                .center(17, ' '),
+            ]) + '|'
+            table_newton.append(tmp)
+        table_newton.append('|' + '|'.join([
+            f'{len(x_list) - 1}'.center(5, ' '),
+            f'[{round(x_list[len(x_list) - 1], -round(math.log(eps, 10)) + 1)}]'
+            .center(15, ' '),
+            f''.center(15, ' '),
+            f''.center(15, ' '),
+            f''.center(17, ' '),
+        ]) + '|')
+        table_newton.append(line_newton)
+        table_newton.append('|' + f'x = {round(x_list[len(x_list) - 1], -round(math.log(eps, 10)))}'
+                            .center(width_newton - 2) + '|')
+        table_newton.append(line_newton)
+        table_newton_str = '\n'.join(table_newton)
+    except ValueError as ex:
+        table_newton_str = ex.args[0]
+    return table_newton_str
+
+
+def create_table_simple_iteration(a: float, b: float, eps: float, phi_func, phi_der_func) -> str:
+    table_simple_iteration = []
+    width_simple_iteration = 4 + 15 * 3
+    line_simple_iteration = '-' * width_simple_iteration
+    title_simple_iteration = ('|' + 'Simple iteration method'.center(width_simple_iteration - 2, ' ')
+                              + '|\n|'
+                              + f'[{a}, {b}], epsilon = {eps}'.center(width_simple_iteration - 2, ' ')
+                              + '|')
+    header_simple_iteration = '|' + '|'.join([
+        'k'.center(15, ' '),
+        'x'.center(15, ' '),
+        'phi(x)'.center(15, ' ')
+    ]) + '|'
+    try:
+        x_list_2, phi_list_2 = simple_iteration_method(a, b, phi_func, phi_der_func, eps)
+        table_simple_iteration.append(line_simple_iteration)
+        table_simple_iteration.append(title_simple_iteration)
+        table_simple_iteration.append(line_simple_iteration)
+        table_simple_iteration.append(header_simple_iteration)
+        table_simple_iteration.append(line_simple_iteration)
+        for j in range(len(x_list_2) - 1):
+            tmp = '|' + '|'.join([
+                f'{j}'.center(15, ' '),
+                f'{round(x_list_2[j], -round(math.log(eps, 10)) + 1)}'
+                .center(15, ' '),
+                f'{round(phi_list_2[j], -round(math.log(eps, 10)) + 1)}'
+                .center(15, ' ')
+            ]) + '|'
+            table_simple_iteration.append(tmp)
+        table_simple_iteration.append('|' + '|'.join([
+            f'{len(x_list_2) - 1}'.center(15, ' '),
+            f'[{round(x_list_2[len(x_list_2) - 1], -round(math.log(eps, 10)) + 1)}]'
+            .center(15, ' '),
+            f''.center(15, ' ')
+        ]) + '|')
+        table_simple_iteration.append(line_simple_iteration)
+        table_simple_iteration.append('|' + f'x = {round(x_list_2[len(x_list_2) - 1], -round(math.log(eps, 10)))}'
+                                      .center(width_simple_iteration - 2) + '|')
+        table_simple_iteration.append(line_simple_iteration)
+        table_simple_iteration_str = '\n'.join(table_simple_iteration)
+    except ValueError as ex:
+        table_simple_iteration_str = ex.args[0]
+    return table_simple_iteration_str
+
+
 if __name__ == '__main__':
-    # TODO !!!!!!!!!!!!!!!!!! --------------------------------
-    epsilon = 0.001
-    try:
-        for values in newton_method(1.5, 2.0, epsilon):
-            print([round(el, -round(math.log(epsilon, 10)) + 1) for el in values])
-        print()
-        for values in newton_method(-1.0, -0.5, epsilon):
-            print([round(el, -round(math.log(epsilon, 10)) + 1) for el in values])
-    except ValueError as ex:
-        print(ex.args[0])
+    with open(sys.argv[1], 'r', encoding='UTF-8') as fin:
+        epsilon = float(fin.readline().rstrip('\n'))
+        a1, b1 = [float(el) for el in fin.readline().rstrip('\n').split()]
+        a2, b2 = [float(el) for el in fin.readline().rstrip('\n').split()]
 
-    print('\n-----\n')
+    # [a1, b1] Newton
+    table_newton_string_1 = create_table_newton(a1, b1, epsilon)
+    # [a2, b2] Newton
+    table_newton_string_2 = create_table_newton(a2, b2, epsilon)
+    # [a1, b1] Simple iteration
+    table_simple_iteration_string_1 = create_table_simple_iteration(a1, b1, epsilon, phi_1, phi_derivative_1)
+    # [a2, b2] Simple iteration
+    table_simple_iteration_string_2 = create_table_simple_iteration(a2, b2, epsilon, phi_2, phi_derivative_2)
 
-    try:
-        for values in simple_iteration_method(1.5, 2.0, phi_1, phi_derivative_1, epsilon):
-            print([round(el, -round(math.log(epsilon, 10)) + 1) for el in values])
-        print()
-        for values in simple_iteration_method(-1.0, -0.5, phi_2, phi_derivative_2, epsilon):
-            print([round(el, -round(math.log(epsilon, 10)) + 1) for el in values])
-    except ValueError as ex:
-        print(ex.args[0])
-    # TODO !!!!!!!!!!!!!!!!!! --------------------------------
+    with open(sys.argv[2], 'w', encoding='UTF-8') as f_out:
+        all_tables = '\n\n'.join([
+            table_newton_string_1,
+            table_newton_string_2,
+            table_simple_iteration_string_1,
+            table_simple_iteration_string_2
+        ])
+        f_out.write(all_tables)
+    print(all_tables)

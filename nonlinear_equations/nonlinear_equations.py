@@ -119,7 +119,8 @@ def check_conditions_simple_iteration(a: float, b: float, phi_func, phi_der_func
     x_vals = np.arange(a, b + 0.01, 0.01)
     try:
         for x in x_vals:
-            phi_func(x)
+            if phi_func(x) > b or phi_func(x) < a:
+                raise ValueError(f'Error conditions are not met for Simple iteration method! Added condition')
     except ValueError:
         return -1.
     q = float('-inf')

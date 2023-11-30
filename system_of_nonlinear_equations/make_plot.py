@@ -32,7 +32,3 @@ if __name__ == '__main__':
     plt.grid(True)
     plt.legend(loc='best', fontsize=12)
     plt.show()
-
-
-# 0.00943991
-# 3.00408047

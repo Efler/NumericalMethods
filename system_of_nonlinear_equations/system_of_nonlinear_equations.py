@@ -180,6 +180,13 @@ def get_q(a_1: float, b_1: float, a_2: float, b_2: float):
     return max(sum(t) for t in phi_derivative)
 
 
+def check_phi(borders, g):
+    for c in it.combinations(borders, r=2):
+        if abs(phi_1(*c)) >= g or abs(phi_2(*c)) >= g:
+            return False
+    return True
+
+
 def simple_iteration_method(a_1: float, b_1: float, a_2: float, b_2: float, eps: float) \
         -> list[list[tuple[float, float]]]:
     g = (((b_1 - a_1) / 4) + ((b_2 - a_2) / 4)) / 2
@@ -188,6 +195,10 @@ def simple_iteration_method(a_1: float, b_1: float, a_2: float, b_2: float, eps:
     q = get_q(a_1, b_1, a_2, b_2)
     if q >= 1:
         raise ValueError(f'Simple iteration method ERROR --> q is greater than 1 ({q})!')
+    if check_phi([a_1, b_1, a_2, b_2], g):
+        raise ValueError(f'ERROR!')
+    else:
+        print('its ok')
     x_list = [(x0_1, x0_2)]
     phi_list = []
     while (len(x_list) < 2 or

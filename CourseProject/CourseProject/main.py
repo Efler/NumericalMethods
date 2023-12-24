@@ -10,6 +10,14 @@ from mnk import mnk
 from thermodynamic_properties_of_substances import ThermodynamicPropertiesOfSubstances as TPoS
 
 
+def standard_deviation(prop: str, func) -> float:
+    temps = my_props.temperatures_for_element(current_element)
+    temps = temps[temps.index(500):temps.index(6000)]
+    theoretical_vals = [my_props.get_property(current_element, t, prop) for t in temps]
+    practical_vals = [func(t) for t in temps]
+    return sum(math.pow(pr - th, 2) for (th, pr) in zip(theoretical_vals, practical_vals))
+
+
 def set_plot(a: float, b: float, props: list, width: float, height: float, window_num: int) -> None:
     props_titles = {
         'Cp': 'Cp',
@@ -35,6 +43,11 @@ def set_plot(a: float, b: float, props: list, width: float, height: float, windo
         pylab.ylabel(fr'${props_titles[prop]}$', fontsize=10)
         pylab.grid(True)
         pylab.legend(loc='best', fontsize=12)
+        pylab.text(0.7, 0.15, f'кв. отклонение: {standard_deviation(prop, func)}',
+                   transform=pylab.gca().transAxes,
+                   fontsize=12,
+                   va='top', ha='left',
+                   bbox=dict(facecolor='white', alpha=0.7, fill=True))
     pylab.gcf().set_size_inches(width, height)
     pylab.gcf().suptitle(current_element, fontsize=20)
     pylab.gcf().canvas.manager.set_window_title(current_element)

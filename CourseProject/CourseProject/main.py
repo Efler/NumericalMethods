@@ -42,8 +42,8 @@ def set_plot(a: float, b: float, props: list, width: float, height: float, windo
         pylab.xlabel(r'$T$', fontsize=10)
         pylab.ylabel(fr'${props_titles[prop]}$', fontsize=10)
         pylab.grid(True)
-        pylab.legend(loc='best', fontsize=12)
-        pylab.text(0.7, 0.15, f'кв. отклонение: {standard_deviation(prop, func)}',
+        pylab.legend(loc='best', fontsize=16)
+        pylab.text(0.55, 0.15, f'кв. отклонение: {round(standard_deviation(prop, func), 4)}',
                    transform=pylab.gca().transAxes,
                    fontsize=12,
                    va='top', ha='left',

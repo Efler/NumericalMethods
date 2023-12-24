@@ -3,8 +3,8 @@ import sys
 
 import numpy as np
 import pylab
-from tabulate import tabulate
 from art import text2art
+from tabulate import tabulate
 
 from mnk import mnk
 from thermodynamic_properties_of_substances import ThermodynamicPropertiesOfSubstances as TPoS

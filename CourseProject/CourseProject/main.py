@@ -90,6 +90,7 @@ if __name__ == '__main__':
     all_elements = my_props.elements_names()
     WITH_PLOTS = True if len(sys.argv) > 1 and sys.argv.count('-p') > 0 else False
     WITH_LOGS = True if len(sys.argv) > 1 and sys.argv.count('-l') > 0 else False
+    logs = []
 
     for element_number, current_element in enumerate(all_elements, 1):
         temperatures = my_props.temperatures_for_element(current_element)
@@ -151,27 +152,34 @@ if __name__ == '__main__':
 
 
         if WITH_LOGS:
-            print('\n\n' + text2art(current_element, font='tarty1' + '\n\n'))
-            print(log_coefficients(polynomial_coefficients))
-            print(log_properties('Ф', temperatures,
-                                 [my_props.get_property(current_element, t, 'Fi') for t in temperatures],
-                                 [fi(t) for t in temperatures]))
-            print(log_properties('G', temperatures,
-                                 ['-' for _ in temperatures],
-                                 [g(t) for t in temperatures]))
-            print(log_properties('S', temperatures,
-                                 [my_props.get_property(current_element, t, 'S') for t in temperatures],
-                                 [s(t) for t in temperatures]))
-            print(log_properties('Cp', temperatures,
-                                 [my_props.get_property(current_element, t, 'Cp') for t in temperatures],
-                                 [c_p(t) for t in temperatures]))
-            print(log_properties('ΔH', temperatures,
-                                 [my_props.get_property(current_element, t, 'delta_H') for t in temperatures],
-                                 [delta_h(t) for t in temperatures]))
+            for log in [
+                ('\n\n' + text2art(current_element, font='tarty1' + '\n\n')),
+                log_coefficients(polynomial_coefficients),
+                log_properties('Ф', temperatures,
+                               [my_props.get_property(current_element, t, 'Fi') for t in temperatures],
+                               [fi(t) for t in temperatures]),
+                log_properties('G', temperatures,
+                               ['-' for _ in temperatures],
+                               [g(t) for t in temperatures]),
+                log_properties('S', temperatures,
+                               [my_props.get_property(current_element, t, 'S') for t in temperatures],
+                               [s(t) for t in temperatures]),
+                log_properties('Cp', temperatures,
+                               [my_props.get_property(current_element, t, 'Cp') for t in temperatures],
+                               [c_p(t) for t in temperatures]),
+                log_properties('ΔH', temperatures,
+                               [my_props.get_property(current_element, t, 'delta_H') for t in temperatures],
+                               [delta_h(t) for t in temperatures])
+            ]:
+                logs.append(log)
 
         if WITH_PLOTS:
             set_plot(100, 10000, [
                 ('Fi', fi), ('S', s), ('Cp', c_p), ('delta_H', delta_h)
             ], 16, 8, element_number)
+    if WITH_LOGS:
+        print('\n'.join(logs))
+        with open('logs.txt', 'w', encoding='UTF-8') as file_logs:
+            file_logs.write('\n'.join(logs))
     if WITH_PLOTS:
         pylab.show()

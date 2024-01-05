@@ -1,4 +1,29 @@
+from copy import deepcopy
 from math import sqrt, pow
+
+
+def beautify_matrix(matrix: [[float]]) -> [[str]]:
+    str_matrix = []
+    res_matrix = []
+    for row in matrix:
+        for el in row:
+            str_matrix.append(str(el))
+    max_width = max(map(lambda x: len(x), str_matrix))
+    for row in matrix:
+        res_matrix.append([str(x).rjust(max_width, ' ') for x in row])
+    return res_matrix
+
+
+def glue_str_matrix(matrix: [[str]], row_sep='\n', col_sep='  ') -> str:
+    return row_sep.join(col_sep.join(row) for row in matrix)
+
+
+def round_up(matrix: [[float]], n: int = 2) -> [[float]]:
+    res = deepcopy(matrix)
+    for i in range(len(res)):
+        for j in range(len(res[i])):
+            res[i][j] = round(res[i][j], n)
+    return res
 
 
 def multiply_matrix(a: [[float]], b: [[float]], eps: int = None) -> [[float]]:
